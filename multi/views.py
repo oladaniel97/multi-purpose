@@ -3,6 +3,7 @@ import requests
 from .models import Todo,Dic,City
 from .forms import TodoForm,DicForm,cityform
 from pydictionary import *
+from django.views.decorators.csrf import csrf_exempt
 
 
 
@@ -10,6 +11,7 @@ from pydictionary import *
 def home(request):
     return render(request,'index.html',{})
 
+@csrf_exempt
 def todo(request):
     items = Todo.objects.all()
 
@@ -27,7 +29,7 @@ def delete(request, id):
     
     return redirect('/todo')
 
-
+@csrf_exempt
 def dic(request):
     if request.method == 'POST':
         form  = DicForm(request.POST)
@@ -59,7 +61,7 @@ def deleted(request, id):
     return redirect('/dic')
 
 
-
+@csrf_exempt
 def city(request):
     if request.method == 'POST':
         form  = cityform(request.POST)
