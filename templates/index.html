@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <style>
+        body{
+            background-color: rgb(196, 229, 241);
+            color: black;
+        }
+        a{
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="p-3">
+            <a href="{% url 'note:todo' %}" class="text-decoration-none">Todo</a>
+        </h2 >
+        <h2 class="p-3">
+            <a href="{% url 'note:dic' %}" class="text-decoration-none">Dictionary</a>
+        </h2>
+        <h2 class="p-3">
+            <a href="{% url 'note:city' %}" class="text-decoration-none">Weather</a>
+        </h2>
+        
+    </div>
+</body>
+</html>
