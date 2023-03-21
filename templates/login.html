@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <style>
+        body{
+            background-color: rgb(196, 229, 241);
+            color: black;
+        }
+        a{
+            color: black;
+        }
+        input{
+            border:1px solid rgb(116, 114, 114);
+            background-color: rgb(243, 243, 240);
+            width:100%;
+            border-radius: 8px;
+            padding: 0.5rem;
+            font-size: 1rem;
+            margin:0.5rem 0;
+        }
+
+        .btn{
+            background-color: #048D4D;
+            color: antiquewhite; 
+            font-size: 22px;
+          }
+          .btn:hover{
+            background-color: #04351e;
+            color:antiquewhite;
+          }
+    </style>
+</head>
+<body>
+    <div class="container mt-3">
+        <div class="text-center bg-gradient py-2 mb-3 d-flex justify-content-between">
+            <h2>Login</h2>
+            <h2 class="">
+                <a href="{% url 'note:home' %}">Home</a>
+            </h2>
+        </div>
+        <form action="" method="POST">
+            {% csrf_token%}
+            <div class="container text-center">
+              <input
+                type="text"
+                class="mb-4"
+                name="username"
+                id=""
+                placeholder="Username"
+              />
+              <input type="password" name="password" id="" placeholder="Password" />
+                <input type="submit" class="btn w-100 mb-3 mt-3" value='Login'>
+            </div>
+            <div class="container w-75 text-center">
+              {% comment %} <input type="submit" class="btn w-100 mb-3 mt-3" value='Login'> {% endcomment %}
+              {% for message in messages%}
+                <h5><em>{{message}}</em></h5>
+              {% endfor %}
+              <p>
+                Do not have an Account?
+                <a href="{% url "note:signup" %}">Create Account</a>
+              </p>
+            </div>
+          </form>
+        
+    </div>
+</body>
+</html>

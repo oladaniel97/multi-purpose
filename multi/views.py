@@ -4,20 +4,37 @@ from .models import Todo,Dic,City
 from .forms import TodoForm,DicForm,cityform
 from pydictionary import *
 from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
+from django.contrib import messages
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
+
+from .forms import UserCreation
+
 
 
 
 # Create your views here.
 def home(request):
-    return render(request,'index.html',{})
+    user_authenticated = request.user.is_authenticated
+    context = {
+        'user_authenticated': user_authenticated
+    }
+    return render(request,'index.html',context)
 
+@login_required
 @csrf_exempt
 def todo(request):
-    items = Todo.objects.all()
+    items = Todo.objects.filter(user=request.user)
 
     if request.method == 'POST':
         form  = TodoForm(request.POST)
-        form.save()
+        todo_item = form.save(commit=False)
+        todo_item.user = request.user
+        todo_item.save()
 
     form = TodoForm()
     return render(request, 'todo/index.html',{'form':form,'items':items})
@@ -29,12 +46,15 @@ def delete(request, id):
     
     return redirect('/todo')
 
+@login_required
 @csrf_exempt
 def dic(request):
     if request.method == 'POST':
         form  = DicForm(request.POST)
-        form.save()
-    items = Dic.objects.all()
+        dic_item = form.save(commit=False)
+        dic_item.user = request.user
+        dic_item.save()
+    items = Dic.objects.filter(user=request.user)
     words = []
     for item in items:
         dict = Dictionary(item)
@@ -60,15 +80,19 @@ def deleted(request, id):
     pos.delete()
     return redirect('/dic')
 
-
+@login_required
 @csrf_exempt
 def city(request):
     if request.method == 'POST':
         form  = cityform(request.POST)
-        form.save()
-
+        city_item = form.save(commit=False)
+        city_item.user = request.user
+        city_item.save()
+            
+            
+    
     form = cityform()
-    cities = City.objects.all()
+    cities = City.objects.filter(user=request.user)
     weather_data = []
 
     for city in cities:
@@ -97,9 +121,7 @@ def city(request):
         }
         weather_data.append(data)
 
-        if city is  weather_data:
-            pass
-
+        
 
 
     return render(request, 'weather/weat.html', {'weather_data':weather_data,'form':form})
@@ -110,3 +132,55 @@ def deleter(request, city):
     
     
     return redirect('/city')
+
+# 
+
+
+@csrf_exempt
+def login_page(request):
+    # if request.user.is_authenticated:
+    #     return redirect('note:home')
+    # else:
+    if request.method == 'POST':
+        username= request.POST.get('username')
+        password= request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request,user)
+            return redirect('note:home')
+        else:
+                messages.info(request, 'Username or Password is incorrect')
+    user_authenticated = request.user.is_authenticated
+    context = {
+        'user_authenticated': user_authenticated
+    }
+    
+    return render(request, 'login.html', context)
+
+    
+# def register(request):
+#     return render(request, 'registration.html')
+
+@csrf_exempt
+def register(request): 
+    if request.user.is_authenticated:
+        return redirect('note:home')
+    else:
+        form = UserCreation()  
+        if request.method == 'POST':
+            form = UserCreation(request.POST)
+            if form.is_valid():
+                form.save()
+                user = form.cleaned_data.get('username')
+                messages.success(request, 'Account was created for '+ user )
+                return redirect('note:login')
+        context = {'form':form }  
+        return render(request, 'signup.html', context) 
+
+
+def logout_page(request):
+    logout(request)
+    messages.success(request, 'You have been logged out')
+    return redirect('note:login')
