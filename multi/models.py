@@ -14,8 +14,8 @@ class Todo(models.Model):
         ordering =('-date_added',)
 
 class Dic(models.Model):
+    # id = models.IntegerField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE ,default='')
-    id = models.IntegerField(primary_key=True)
     word = models.CharField(max_length=255,null=True, blank=True)
     date_added = models.DateTimeField(auto_now_add=True)
 
@@ -27,7 +27,7 @@ class Dic(models.Model):
 
 class City(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE ,default='')
-    id = models.IntegerField(primary_key=True)
+    # id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=50)
     def __str__(self):
         return self.name
